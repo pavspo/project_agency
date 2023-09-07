@@ -1,0 +1,62 @@
+from django.db import models
+
+создание класса модели (таблицы категорий)
+
+class CatalogCategory(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+    sort = models.PositiveIntegerField(default=500)
+    title = models.CharField(max_length=256, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    preview_text = models.TextField(null=True, blank=True)
+    detail_text = models.TextField(null=True, blank=True)
+    preview_picture = models.ImageField(
+        upload_to='category/preview',
+        null=True,
+        blank=True)
+    detail_picture = models.ImageField(
+        upload_to='category/detail',
+        null=True,
+        blank=True)
+
+
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
+
+    def __str__(self):
+        return f'категория: {self.name} '
+
+
+
+создание моделей через консоль
+from products.models import CatalogCategory
+category = CatalogCategory(name="Одежда", description="Описание для одежды")
+category.save()
+category
+
+
+QuerySet = набор запросов, который представляет собой набор объектов из бд
+
+обращение к модели
+from products.models import CatalogCategory
+catalog = CatalogCategory.objects.get(id=1)
+
+создание
+from products.models import CatalogCategory
+CatalogCategory.objects.create(name="Обувь")
+
+Получение всех элементов
+CatalogCategory.objects.all()
+
+CatalogCategory.objects.filter(description=None)
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+создаем дамп фикстуры указываем модель и  класс и путь с названием файла
+python manage.py dumpdata products.CatalogCategory > products/fixtures/category.json
+python manage.py dumpdata products.Element > products/fixtures/element.json
+
+загрузить фикстуры
+python manage.py loaddata products/fixtures/category.json
+python manage.py loaddata products/fixtures/element.json
+
+при загрузке сделанных фикстур надо поменть кодировку файлов в utf-8

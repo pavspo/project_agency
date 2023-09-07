@@ -1,0 +1,7 @@
+  обращаемся к модели и регистрируем ее
+
+  from products.models import Catalog.Category, Element
+
+admin.site.register(Element)
+admin.site.register(CatalogCategory)
+

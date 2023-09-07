@@ -1,0 +1,162 @@
+/*
+
+
+pip freeze > requirements.txt
+
+-создаем папку проекта, в нее закиываем архив без env
+-в коренной папке выбираем настройки , project  interpriter выбираем локальное виртуальное окружение и создаем локальное виртуальное окружение
+- активируем виртуальное окружение
+cd store/
+source ../venv/bin/activate
+
+- смотрим какие зависимости уже установлены
+pip list
+- устанавливаем библиотеки из зависимостей зайдя в папку проекта cd store
+установка
+pip install -r requirements.txt
+запускаем сервер
+python manage.py run server
+
+
+
+0)
+adduser user_name
+usermod -aG sudo user_name
+usermod -a -G user_name www-data
+
+1) PostgreSQL
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+входим в сервер бд
+sudo -u postgres psql
+\l     просмотр баз данных
+
+CREATE DATABASE db_store;
+CREATE ROLE user_store with password 'Sss_2014';
+ALTER ROLE "user_store" WITH LOGIN;
+GRANT ALL PRIVILEGES ON DATABASE "db_store" to user_store;
+ALTER USER user_store CREATEDB;
+\q  выходим
+
+3) создаем виртуальное окружение
+mkdir  store-server
+cd store-server/
+sudo apt install python3-venv
+python3 -m venv venv                   запускаем
+source venv/bin/activate
+
+
+4)копируем файлы приложения в папку store-server (без папки media)
+
+cd store/
+source ../venv/bin/activate               активируем виртуальное окружение
+pip install -r requirements.txt           устанавливаем пакеты
+
+python3 manage.py shell_plus
+from django.conf import settings
+settings.DATABASES
+exit()
+python3 manage.py migrate          делаем миграцию
+
+5)подключаем статику на сервере
+в settings.py ставим условия для подключения статики
+STATIC_URL = '/static/'
+if DEBUG:
+    STATICFILES_DIRS = (
+        BASE_DIR / 'static',
+    )
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
+
+
+cd store-server/store/	консоль
+source ../venv/bin/activate
+python3 manage.py collectstatic	активируем статику, в папке static должны появиться доп папки
+python3 manage.py runserver 0.0.0.0:8000	тестово провреяем что сайт запускается
+
+
+УСТАНОВКА GUNICORN
+cd store-server/store/
+source ../venv/bin/activate
+pip install gunicorn
+
+
+создаем файл
+sudo nano /etc/systemd/system/gunicorn.socket
+
+	заполняем и сохраняемся
+
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+
+
+
+создаем 2 файл
+
+sudo nano /etc/systemd/system/gunicorn.service
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=store
+Group=www-data
+WorkingDirectory=/home/pavspo/store-server/store
+ExecStart=/home/pavspo/store-server/venv/bin/gunicorn \
+		--access-logfile- \
+		--workers 3 \
+		--bind unix:/run/gunicorn.sock \
+		store.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+sudo systemctl start gunicorn.socket	запускаем командой
+sudo systemctl enable gunicorn.socket	включаем
+sudo systemctl status gunicorn.socket	проверяем
+sudo systemctl status gunicorn	проверяем работу его сервисов
+
+
+
+УСТАНОВКА NGINX
+sudo apt install nginx
+
+
+sudo nano /etc/nginx/sites-available/store
+server {
+        listen 80;
+        server_name 82.146.46.117;
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location /static/{
+        root home/pavspo/store-server/store;
+        }
+
+        location / {
+                include proxy_params;
+                proxy_pass http://unix:/run/gunicorn.sock;
+        }
+}
+
+запускаем nginx
+sudo ln -s /etc/nginx/sites-available/store /etc/nginx/sites-enabled
+
+sudo nginx -t	проверяем конфигурацию
+
+sudo systemctl restart nginx	перезапускаем nginx
+
+
+
+*/

@@ -1,0 +1,3 @@
+manage.py test products.tests.IndexViewTestCase.test_view
+при запуске тестов создается временная пустая бд и после окончания теста - удаляется
+

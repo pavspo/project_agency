@@ -1,0 +1,20 @@
+импортируем функции или классы приложения  которые будут учавствовать
+1 параметр url
+2 параметр функция/метод контроллера
+3 параметр переменная name - для url адреса в шаблоне
+urlpatterns = [
+    path('', index, name='index',
+]
+
+переменная request является экземпляром класса (объектом) класса HttpRequest
+
+выносим управление url в отдельные файлы urls.py в свои приложения в файлах urls.py
+подключаем include
+from django.urls import path, include
+в urlpattern подключаем файл из приложения
+path('catalog/', include(products.urls, namespace='products')),
+в папке приложения создаем свой urls.py
+добавляем в него приложение app_name = 'products'
+и логкику подключения
+path('', products, name='index'),
+Первый параметр уже без названия основного url, в частности /catalog/

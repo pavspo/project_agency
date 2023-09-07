@@ -1,0 +1,12 @@
+python manage.py --help
+python manage.py runserver
+python manage.py shell   = Python Console
+Cntl + C stop server
+
+создание приложение (NAME - имя приложения)
+python manage.py startapp NAME
+
+python manage.py makemigrations   создание новых миграций
+python manage.py migrate          миграции
+
+python manage.py createsuperuser   создание админа

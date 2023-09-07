@@ -1,0 +1,24 @@
+В большинстве случаев необходимо иметь функционал больше чем стандартный в в django пользователей
+1) создаем приложение
+python manage.py startapp users
+2) в settings.py
+ регистрируем его в INSTALLED_APPS = [ ..., users,
+ и там же глобально переопределяем модель пользователя
+#users
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = '/users/login/'
+
+Желательно делать это на моменте проектирования сайта, а если позже то надо удалить базу данных и заново сделать миграции
+снова создать суперпользователя и загрузить фикстуры
+
+в users/admin.py зарегистрировать в админке
+
+from users.models import User
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username',)
+
+Контроллер авторизации
+Audit - контроль
+Authentication - подтверждение подлинноости
+Authorisation - разрешение

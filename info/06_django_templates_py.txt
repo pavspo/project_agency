@@ -1,0 +1,14 @@
+подключение статичных данных
+{% load static %}
+<script src="{% static 'assets/js/main.js' %}"></script>
+наследуемся от базового статичного шаблона со стилями, скриптами и heade и footer
+{% extends 'products/base.html' %}
+
+{% шаблонные тег %}
+{{ переменная (placeholder) }}
+пример перебора ключа products из контекста
+    {{ for product in products }}
+        <h2>{{ product.name }}</h2>
+        <img src="{{ product.img }}"/>
+        <p>{{ product.descritpion }}</p>
+    {{ endfor  }}

@@ -1,0 +1,17 @@
+в данном приложении создаются функции / классы  = КОНТРОЛЛЕРЫ = Вьюхи
+
+для доступа к моделям импортируем их
+from products.models import CatalogCategory, Element
+выбираем все элементы и закидываем переменную в контекст
+
+context - словарь в котором передаются данные в шаблон
+указывается внутри функции или класса для передачи данных в шаблон
+def index(request):
+    context = {'title': 'Tiltle text',
+    'description': 'Text descriptions',
+    'products': Element.objects.all(),
+    'category': CatalogCategory.objects.all(),
+    }
+    return render(request, 'products/index.html', context)
+
+CLASS BASED VIEWS
