@@ -30,8 +30,8 @@ class Accommodation(models.Model):
                                   max_length=60, blank=True)
     description = models.TextField(verbose_name='описание продукта',
                                    blank=True)
-    availability = models.PositiveIntegerField(
-        verbose_name='количество свободных номеров')
+    availability = models.PositiveIntegerField(verbose_name=
+                                               'количество свободных номеров')
     price = models.DecimalField(
         verbose_name='цена', max_digits=8, decimal_places=2, default=0)
     room_desc = models.TextField(verbose_name='краткое описание комнаты',
@@ -41,7 +41,8 @@ class Accommodation(models.Model):
     @staticmethod
     def get_items():
         return Accommodation.objects.filter(is_active=True).order_by('country',
-            'regions', 'name')
+                                                                     'regions',
+                                                                     'name')
 
     def __str__(self):
         return f'{self.name} ({self.country.name})'
